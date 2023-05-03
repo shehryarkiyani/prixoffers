@@ -29,40 +29,21 @@ import { ToastContainer, toast } from 'react-toastify';
 import Modal from 'react-modal';
   import 'react-toastify/dist/ReactToastify.css';
 import { setShowJoinModal } from "@/redux/joinModalSlice";
-export const getStaticPaths = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vouchers/`);
-  const vouchers = await res.json();
-  const paths = vouchers.vouchers.map((voucher) => {
-    return {
-      params: { id: voucher._id.toString() },
-    };
-  });
 
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async (context) => {
+export const getServerSideProps = async (context) => {
   const id = context.params.id;
-  console.log(id,"HERE")
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vouchers/${id}`,{
-    method:"get"
-  });
-  const voucher = await res.json();
 
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vouchers/${id}`);
+  let voucher = await res.json();
   return {
     props: { voucher },
-    revalidate: 60,
   };
 };
-
 const ProductPage = ({ voucher }) => { 
   const jwt = getCookie("token");
   let user = useSelector((state) => state.auth.user);
   const[Voucher,setVoucher]=useState(voucher)
-  const dispatch=useDispatch();
+  const dispatch=useDispatch(); 
   const[Liked,setLiked]=useState(voucher?.voucher?.likes?.length)
   const[isLiked,setisLiked]=useState(voucher?.voucher?.likes?.includes(user._id))
   const[isSaved,setisSaved]=useState(user?.savedVouchers?.includes(voucher?.voucher?.id)||false)
@@ -198,7 +179,7 @@ const Share=()=>{
       let config = {
         method: "PATCH",
         maxBodyLength: Infinity,
-        url: `${process.env.NEXT_PUBLIC_API_URL}/vouchers/reshare/${voucher.voucher.id}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/vouchers/reshare/${voucher?.voucher?.id}`,
         headers: {
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json",
@@ -238,7 +219,7 @@ const Share=()=>{
       let config = {
         method: "post", 
         maxBodyLength: Infinity,
-        url: `${process.env.NEXT_PUBLIC_API_URL}/reports/${voucher.voucher.id}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/reports/${voucher?.voucher?.id}`,
         headers: {
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json",
