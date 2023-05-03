@@ -43,10 +43,11 @@ export async function getStaticProps() {
 export default function Home({categories,offers,topDeals}) {
   const dispatch = useDispatch();
   const userdata = useSelector(state=> state.auth.user);
+  
   const[user,setuser]=useState(userdata)
   const[loading,setloading]=useState(false)
   const jwt = getCookie("token");
-  const[dealoffers,setdealoffers]=useState(offers.offers)
+  const[dealoffers,setdealoffers]=useState(offers?.offers||[])
  
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function Home({categories,offers,topDeals}) {
       axios
         .request(config)
         .then((response) => {
-          console.log("RES", response.data);
+          console.log("RES1", response.data);
           dispatch(loginUser(response.data.user));
           setuser(response.data.user);
           setloading(false)
@@ -85,7 +86,7 @@ useEffect(()=>{
     dispatch(setOffers(offers.offers))
     dispatch(setTopDeals(topDeals.deals))
     console.log(offers.offers,"offer")
-    setOffers(offers.offers)
+    dispatch( setOffers(offers.offers))
 },[])
 //categories.categories,offers.offers,topDeals.deals
   return ( 

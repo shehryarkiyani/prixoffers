@@ -12,11 +12,13 @@ import { getCookie } from "cookies-next";
 import { useSelector,useDispatch } from "react-redux";
 import { setShowJoinModal } from "@/redux/joinModalSlice";
 import { loginUser } from "@/redux/auth/action-creators";
+import { setOffers,setTopDeals } from "@/redux/offersSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPrice, likes, comments,item,user }) => {
   const router = useRouter();
   const jwt = getCookie("token");
   const dynamicUrl = `/${offerType == "Voucher" ? "vouchers" : "deals"}/${offerid}`
-  
  
   const [liked,setLiked]=useState(item?.likes?.includes(user?._id) || false)
   const[totalLiked,setTotalLiked]=useState(item?.likes?.length || 0)
@@ -32,6 +34,7 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
   const likeDeal = () => {
     console.log(item.id,"itemId",user._id," userid","ui",item?.likes?.includes(user?._id),"item",item,"user",user)
     const axios = require("axios");
+
     if (liked) {
     
       let config = {
@@ -47,6 +50,7 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
         .then((response) => {
         
           setLiked(false)
+          toast("DisLike Successfully")
           setTotalLiked((prevLiked) => prevLiked - 1);
         })
         .catch((error) => {
@@ -64,7 +68,7 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
       axios
         .request(config)
         .then((response) => {
-         
+          toast("Like Successfully")
           setLiked(true)
           setTotalLiked((prevLiked) => prevLiked + 1);
         })
@@ -74,6 +78,7 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
         });
     }
     updateUser();
+    updateOffers()
   };
   const updateUser=()=>{
     const axios = require("axios");
@@ -89,13 +94,26 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
     axios
       .request(config)
       .then((response) => {
-        console.log("RES", response.data);
+        console.log("RES2", response.data);
         dispatch(loginUser(response.data.user));
       
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+  const updateOffers=async()=>{
+    const offers= await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/offers/?fields=-details`
+    ).then((res) => res.json())
+    console.log(offers,"updatedOffers")
+    dispatch(setOffers(offers.offers))
+  }
+  const updateDeals=()=>{
+
+  }
+  const updateVouchers=()=>{
+
   }
   const CommentClicked=()=>{
     router.push(dynamicUrl)
@@ -105,12 +123,16 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
     if(jwt==undefined){
       setLiked(false)
     }else{
-     
-      if(item?.likes?.includes(user?._id) ){
+      if((user?.likedDeals?.includes(offerid)||user.likedVouchers?.includes(offerid))){
         setLiked(true)
       }else{
         setLiked(false)
       }
+      // if(item?.likes?.includes(user?._id) ){
+       
+      // }else{
+        
+      // }
      
     }
    
@@ -118,6 +140,9 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
 
   return (
     <div  className="flex flex-col p-3 bg-white rounded-xl space-y-3 justify-between cursor-pointer h-[345px] sm:h-[385px] lg:h-[410px]">
+     <ToastContainer
+     autoClose={1000}
+     />
       <a onClick={()=>{
       router.push(dynamicUrl)
     }}  className="flex space-x-2">

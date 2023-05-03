@@ -67,7 +67,7 @@ const dispatch=useDispatch()
         axios
           .request(config)
           .then((response) => {
-          
+            toast("Dislike Successfully")
             setisLiked(false)
             setLiked((prevLiked) => prevLiked - 1);
           })
@@ -88,6 +88,7 @@ const dispatch=useDispatch()
           .request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            toast("like Successfully")
             setisLiked(true)
             setLiked((prevLiked) => prevLiked + 1);
           })
@@ -225,7 +226,7 @@ const Share=()=>{
  
   return (
     <div className="flex flex-col items-center justify-center bg-secondary">
-      <ToastContainer />
+      <ToastContainer autoClose={3000} />
       {/* ITEM HEADER */}
       <div className="w-full bg-white flex justify-center mb-8">
         <div className="bg-white pt-20 w-full max-w-5xl px-3 md:px-10">

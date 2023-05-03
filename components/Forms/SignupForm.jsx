@@ -52,10 +52,13 @@ const SignupForm = () => {
     axios(config)
       .then(function (response) {
         console.log("RES", response.data.status);
-        setMessage("Sign up succeeded. A verfication email was sent. Please approve and login to continue!!!")
+        toast("Signup Successfully")
         setLoading(false);
-        dispatch(setShowJoinModal(false));
+      setTimeout(()=>{
+        setMessage("Sign up succeeded. A verfication email was sent. Please approve and login to continue!!!")
       
+      },3000)
+        
        
       })
       .catch(function (error) {

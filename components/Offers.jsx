@@ -5,9 +5,10 @@ import { setOffers } from "@/redux/offersSlice";
 import {ColorRing} from 'react-loader-spinner'
 
 const Offers = ({ title,users ,offerType = "all",homeoffers=[],deal=[],voucher=[],loading=false }) => {
-  
+
  const language=useSelector((state)=>state?.language?.value)
- 
+
+
   const offersList = useSelector((state) =>
     offerType == "all"
       ? homeoffers
@@ -25,7 +26,7 @@ const Offers = ({ title,users ,offerType = "all",homeoffers=[],deal=[],voucher=[
 
 const[filteredList,setFilteredList]=useState(
   selectedCategory !== "All"
-? offers.filter((item)=>item?.category?.name?.toLowerCase()==selectedCategory?.toLowerCase()) 
+? offers?.filter((item)=>item?.category?.name?.toLowerCase()==selectedCategory?.toLowerCase()) 
 : offers)
  
 
@@ -33,6 +34,7 @@ const[filteredList,setFilteredList]=useState(
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+ 
   useEffect(()=>{
 // console.log("homeoffers", homeoffers,"deals",deal,"voucher",voucher)
 
@@ -42,7 +44,8 @@ const[filteredList,setFilteredList]=useState(
     const end = start + itemsPerPage;
     const filter=useSelector(state=> state.selectedFilter.value)
     const[items,setItem]=useState(filteredList)
-
+    const pricestate=useSelector(state=>state?.PriceFilter?.value)
+    const[price,setprice]=useState(pricestate || {min:0,max:0})
     useEffect(()=>{
       if(filter=="Active"){
         let newItems= [...filteredList].filter((item)=>item.isActive===true)
@@ -80,6 +83,27 @@ const[filteredList,setFilteredList]=useState(
   useEffect(()=>{
 setItem(filteredList)
   },[])
+  useEffect(()=>{
+    
+    let min=pricestate?.min==""? 0:Number(pricestate?.min)
+    let max=pricestate?.max==""? 0:Number(pricestate?.max)
+    if((min==0)&& (max==0)){
+      setItem(offersList)
+      console.log(min,max,"min max")
+    }else if((min==0) && (max!=0)){
+      let filteritems=offersList?.filter((item)=>item?.discountedPrice<=(max))
+      setItem(filteritems)
+      console.log(filteritems,"filterprice",min,max)
+    }else if((min!=0) && (max==0)){
+      let filteritems=offersList?.filter((item)=>item?.discountedPrice>=(min))
+      setItem(filteritems)
+      console.log(filteritems,"filterprice",min,max)
+    }else{
+      let filteritems=offersList?.filter((item)=>item?.discountedPrice<=(min) && item?.discountedPrice>=(max))
+      setItem(filteritems)
+      console.log(filteritems,"filterprice",min,max)
+    }
+  },[price,pricestate])
   {loading===true && 
     <div className="flex justify-center">
     <ColorRing

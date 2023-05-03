@@ -5,11 +5,14 @@ import { setCookie } from "cookies-next";
 import * as Yup from "yup";
 import { useState } from "react";
 import { setShowJoinModal } from "@/redux/joinModalSlice";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'; 
 import {auth,provider} from "../../firebaseConfig"
 import { signInWithPopup } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const LoginForm = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -31,6 +34,7 @@ const LoginForm = () => {
 
   const handleSubmit = (values) => {
     setLoading(true);
+   
     var axios = require("axios");
     var data = JSON.stringify({
       email: values.email,
@@ -49,15 +53,20 @@ const LoginForm = () => {
 
     axios(config)
       .then(function (response) {
-        setCookie("token", response.data.token);
-        dispatch(loginUser(response.data.user));
-        console.log(response.data.user)
+        toast("Login Successfully")
         setLoading(false);
-        dispatch(setShowJoinModal(false));
+        setTimeout(()=>{
+          setCookie("token", response.data.token);
+          dispatch(loginUser(response.data.user));
+          console.log(response.data.user)
+          dispatch(setShowJoinModal(false));
+        },3000)
+       
       }) 
-      .catch(function (error) {
+      .catch(function (error) { 
         console.log(error);
         setLoading(false);
+        toast(error?.response?.data?.message)
       });
   };
 const handleClick=async()=>{
@@ -93,11 +102,12 @@ const handleClick=async()=>{
     setLoading1(true)
     axios(config)
     .then(function (response) {
+      toast("Login Successfully")
       router.push('/')
       localStorage.setItem("token",JSON.stringify(response.data.token))
       setCookie("token", response.data.token);
       dispatch(loginUser(response.data.user));
-      
+     
       setLoading1(false);
       dispatch(setShowJoinModal(false));
       
@@ -114,6 +124,7 @@ const handleClick=async()=>{
 }
   return (
     <div>
+      <ToastContainer />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

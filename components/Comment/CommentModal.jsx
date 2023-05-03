@@ -31,7 +31,7 @@ const CommentModal = ({ comments, offer, type,setcomments }) => {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",
     }
-    console.log(comments," ",user._id)
+    
     const filteredComments = comments.filter((comment) => {
       return comment.likes.filter((likeUserId) => {
         return likeUserId === user._id;

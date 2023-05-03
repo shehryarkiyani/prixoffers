@@ -6,7 +6,8 @@ import { getCookie } from "cookies-next";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowJoinModal } from "@/redux/joinModalSlice";
 import { useRouter } from "next/router";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const CommentInput = ({id,setcomments}) => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,10 +26,11 @@ const CommentInput = ({id,setcomments}) => {
     setContent(event.target.textContent);
   };
 
-  const postComment = () => {
+  const postComment = (e) => {
+    e.preventDefault();
     if (isLoggedIn) {
       setLoading(true);
-      console.log("Loading", loading);
+      
 
       const url = `${process.env.NEXT_PUBLIC_API_URL}/offers/comments/${id}`;
       var axios = require("axios");
@@ -51,20 +53,24 @@ const CommentInput = ({id,setcomments}) => {
         .then(function (response) {
           console.log(JSON.stringify(response.data));
           setcomments(response?.data?.offer.comments)
+          
         })
         .catch(function (error) {
           console.log(error);
         });
+        toast("Comment Successfully")
       setContent("");
       setLoading(false);
     } else {
       console.log("Not logged in");
+      
       dispatch(setShowJoinModal(true));
     }
   };
 
   return (
     <div className="flex items-center space-x-2">
+       <ToastContainer autoClose={5000}/>
       <Image
         src="/avatar.png"
         alt="Image"
@@ -82,7 +88,7 @@ const CommentInput = ({id,setcomments}) => {
           />
           <button
             className="focus:outline-none cursor-pointer text-blue-700 font-medium mb-3"
-            onClick={() => postComment()}
+            onClick={postComment}
           >
             {loading ? "Posting..." : "Post"}
           </button>

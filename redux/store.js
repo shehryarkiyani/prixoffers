@@ -6,6 +6,7 @@ import offerReducer from "./offersSlice";
 import joinModalReducer from "./joinModalSlice";
 import langReducer from "./langSlice";
 import selectedFilter from "./selectedFilter";
+import PriceFilter from "./PriceFilter";
 import SearchOffers from "./SearchOffers";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   offers: offerReducer,
   showJoinModal: joinModalReducer,
   language: langReducer,
-  SearchOffers:SearchOffers
+  SearchOffers:SearchOffers,
+  PriceFilter:PriceFilter
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

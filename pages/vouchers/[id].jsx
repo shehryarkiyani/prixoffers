@@ -101,6 +101,7 @@ setVoucher(voucher.voucher)
           
             setLiked((prevLiked) => prevLiked - 1);
             setisLiked(false)
+            toast("Dislike Successfully")
           })
           .catch((error) => {
             console.log(error);
@@ -118,7 +119,7 @@ setVoucher(voucher.voucher)
         axios
           .request(config)
           .then(async(response) => {
-         
+            toast("like Successfully")
             setLiked((prevLiked) => prevLiked + 1);
             setisLiked(true)
           })

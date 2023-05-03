@@ -1,10 +1,18 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { FormattedMessage } from 'react-intl';
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { setPriceFilter } from "@/redux/PriceFilter";
 const PriceFilter = () => {
   const [open, setOpen] = useState(true);
   const language=useSelector((state)=>state?.language?.value)
+  const pricestate=useSelector(state=>state?.PriceFilter?.value)
+  const[price,setprice]=useState(pricestate || {min:0,max:0})
+  const dispatch=useDispatch()
+
+  useEffect(()=>{
+    dispatch(setPriceFilter(price))
+  },[price])
   return (
     <div className="mb-5 border-b border-gray-300">
       <div
@@ -31,6 +39,8 @@ const PriceFilter = () => {
             name="min"
             id="min"
             placeholder={language=="AR"? "من":"Min."}
+            value={Number(price?.min)}
+            onChange={(e)=>setprice({...price,min:e.target.value})}
           />
           <p>to</p>
           <input
@@ -40,6 +50,8 @@ const PriceFilter = () => {
             id="max"
             min={0}
             placeholder={language=="AR"? "أقصى":"Max."}
+            value={Number(price?.max)}
+            onChange={(e)=>setprice({...price,max:e.target.value})}
           />
         </div>
       )}
