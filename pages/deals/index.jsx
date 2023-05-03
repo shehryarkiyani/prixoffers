@@ -25,16 +25,23 @@ const DealsPage = ({ deals }) => {
   const userdata = useSelector(state=> state.auth.user);
   const[user,setuser]=useState(userdata)
   const jwt = getCookie("token");
+  const getdeal=async()=>{
+    const deals = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/deals/?fields=-details`
+    ).then((res) => res.json());
+    setdeals(deals.deals)
+  }
   useEffect(() => {
     dispatch(setDeals(deals.deals));
     setdeals(deals.deals)
   }, [deals.deals, dispatch]);
   useEffect(()=>{
     setuser(userdata)
+    getdeal();
     },[jwt])
   return (
     <FilterLayout headTitle="Deals">
-      <Offers deal={Deals} users={user} title={<><FormattedMessage id="Todays"/> <FormattedMessage id="Deals"/></>  }  offerType="deals" />
+      <Offers offer={Deals} users={user} title={<><FormattedMessage id="Todays"/> <FormattedMessage id="Deals"/></>  }  offerType="deals" />
     </FilterLayout> 
   );
 };

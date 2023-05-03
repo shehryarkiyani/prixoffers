@@ -4,19 +4,10 @@ import OfferCard from "./Cards/OfferCard";
 import { setOffers } from "@/redux/offersSlice";
 import {ColorRing} from 'react-loader-spinner'
 
-const Offers = ({ title,users ,offerType = "all",homeoffers=[],deal=[],voucher=[],loading=false }) => {
-
+const Offers = ({ title,users ,offer=[],loading=false }) => {
+console.log("of",offer)
  const language=useSelector((state)=>state?.language?.value)
-
-
-  const offersList = useSelector((state) =>
-    offerType == "all"
-      ? homeoffers
-      : offerType == "deals"
-      ? deal
-      : voucher
-  );
-  const [offers,setoffers]=useState(offersList)
+  const [offers,setoffers]=useState(offer)
   const selectedCategory = useSelector((state) => state.selectedCategory.value);
   const searchvalue=useSelector((state)=>state.SearchOffers.value)
   const[activeCategory,setactiveCategory]=useState(selectedCategory)
@@ -33,18 +24,27 @@ const[filteredList,setFilteredList]=useState(
  
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
- 
-  useEffect(()=>{
-// console.log("homeoffers", homeoffers,"deals",deal,"voucher",voucher)
+  const [totalPages,setTotalPages] = useState(Math.ceil(filteredList.length / itemsPerPage));
 
-  },[offers,filteredList,activeCategory,homeoffers])
+ 
+
+
+ useEffect(()=>{
+setoffers(offer)
+setFilteredList(selectedCategory !== "All"
+? offer?.filter((item)=>item?.category?.name?.toLowerCase()==selectedCategory?.toLowerCase()) 
+: offer)
+ },[offer])
+useEffect(()=>{
+console.log(totalPages)
+},[totalPages])
   const RenderData = () => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const filter=useSelector(state=> state.selectedFilter.value)
+  const pricestate=useSelector(state=>state?.PriceFilter?.value)
     const[items,setItem]=useState(filteredList)
-    const pricestate=useSelector(state=>state?.PriceFilter?.value)
+    
     const[price,setprice]=useState(pricestate || {min:0,max:0})
     useEffect(()=>{
       if(filter=="Active"){
@@ -81,25 +81,29 @@ const[filteredList,setFilteredList]=useState(
       }
     },[activeCategory, selectedCategory])
   useEffect(()=>{
+    console.log(filteredList,"filteredList")
 setItem(filteredList)
-  },[])
+  },[filteredList])
+  useEffect(()=>{
+    setTotalPages(Math.ceil(items.length / itemsPerPage))
+  },[items])
   useEffect(()=>{
     
     let min=pricestate?.min==""? 0:Number(pricestate?.min)
     let max=pricestate?.max==""? 0:Number(pricestate?.max)
     if((min==0)&& (max==0)){
-      setItem(offersList)
+      setItem(offer)
       console.log(min,max,"min max")
     }else if((min==0) && (max!=0)){
-      let filteritems=offersList?.filter((item)=>item?.discountedPrice<=(max))
+      let filteritems=offers?.filter((item)=>item?.discountedPrice<=(max))
       setItem(filteritems)
       console.log(filteritems,"filterprice",min,max)
     }else if((min!=0) && (max==0)){
-      let filteritems=offersList?.filter((item)=>item?.discountedPrice>=(min))
+      let filteritems=offers?.filter((item)=>item?.discountedPrice>=(min))
       setItem(filteritems)
       console.log(filteritems,"filterprice",min,max)
     }else{
-      let filteritems=offersList?.filter((item)=>item?.discountedPrice<=(min) && item?.discountedPrice>=(max))
+      let filteritems=offers?.filter((item)=>item?.discountedPrice<=(min) && item?.discountedPrice>=(max))
       setItem(filteritems)
       console.log(filteritems,"filterprice",min,max)
     }
@@ -260,6 +264,25 @@ setItem(filteredList)
       <p className="font-bold">{title}</p>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-3">
         {RenderData()}
+        {/* {offers?.slice(start,end).map((offer)=>{
+          return(
+            <OfferCard
+            key={offer._id}
+            item={offer}
+            time={offer.time}
+            image={offer?.image?.path}
+            title={offer.title}
+            deal={offer.deal}
+            price={offer.discountedPrice}
+            realPrice={offer.recommendedRetailPrice}
+            likes={offer.likes}
+            comments={offer.comments}
+            offerType={offer.type}
+            offerid={offer._id}
+            user={users}
+          />
+          )
+        })} */}
       </div>
       <div className="py-10">{RenderPagination()}</div>
     </div>

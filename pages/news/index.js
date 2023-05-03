@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { Fragment } from "react";
 import { FormattedMessage } from 'react-intl';
 import Link from "next/link";
+import { useEffect,useState } from "react";
 export async function getStaticProps() {
   const news = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/blogs/?fields=-content`
@@ -20,12 +21,24 @@ export async function getStaticProps() {
 const News = ({ news }) => {
   
   const router = useRouter();
-  const restNews=news?.blogs.slice(1)
+  const [firstNews,setFirstNews]=useState()
+  const[restNews,setRestNews]=useState()
+  
   console.log(restNews,"rest")
+  const getNews=async()=>{
+    const news = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/blogs/?fields=-content`
+    ).then((res) => res.json());
+    setRestNews(news.blogs.slice(1))
+    setFirstNews(news.blogs[0])
+  }
+  useEffect(()=>{
+    getNews()
+  },[])
   const RenderData = () => {
     return (
       <div className="lg:max-w-7xl flex flex-wrap lg:space-x-4 w-full px-2 lg:px-5 mb-5 space-y-2 lg:space-y-0">
-        <Link href={`/news/${news.blogs[0]?._id}`}
+        <Link href={`/news/${firstNews?._id}`}
           className="bg-white flex flex-col lg:lg:w-[50%] rounded-xl py-4 cursor-pointer"
          
         >
@@ -33,13 +46,13 @@ const News = ({ news }) => {
             {news.blogs[0]?.title}
           </div>
           <Image
-            src={news.blogs[0]?.coverImage}
+            src={firstNews?.coverImage}
             alt="news"
             className="w-full h-fit py-3"
             width={560}
             height={420}
           />
-          <div className="px-4">{news.blogs[0]?.description}</div>
+          <div className="px-4">{firstNews?.description}</div>
           <button
             className="flex font-bold space-x-1 px-4 py-5 w-fit"
            
@@ -51,7 +64,7 @@ const News = ({ news }) => {
 
 
         <div className="flex flex-col justify-between gap-y-2 lg:space-y-0 flex-1">
-         {restNews.map((item,index)=>{
+         {restNews?.map((item,index)=>{
           return(
             <Fragment key={index}>
  <Link href={`/news/${item?._id}`}

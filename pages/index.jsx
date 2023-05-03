@@ -15,11 +15,12 @@ export async function getStaticProps() {
     const categories = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/categories`
     ).then((res) => res.json())
-   const offers= await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/offers/?fields=-details`
-    ).then((res) => res.json())
+  
     const topDeals=await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/deals?limit=10&sort=-likes`
+    ).then((res) => res.json())
+    const offers= await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/offers?fields=-details`
     ).then((res) => res.json())
     return {
       props: {
@@ -47,9 +48,21 @@ export default function Home({categories,offers,topDeals}) {
   const[user,setuser]=useState(userdata)
   const[loading,setloading]=useState(false)
   const jwt = getCookie("token");
-  const[dealoffers,setdealoffers]=useState(offers?.offers||[])
+  const[dealoffers,setdealoffers]=useState([])
  
-
+  const getcategories=async()=>{
+    const categories = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/categories`
+    ).then((res) => res.json())
+    dispatch(setCategories(categories.categories))
+  }
+const getdeals=async()=>{
+  const offers= await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/offers?fields=-details`
+  ).then((res) => res.json())
+ 
+  setdealoffers(offers.offers)
+}
   useEffect(() => {
     console.log("JWT", jwt);
    localStorage.setItem("token",JSON.stringify(jwt))
@@ -72,12 +85,15 @@ export default function Home({categories,offers,topDeals}) {
           dispatch(loginUser(response.data.user));
           setuser(response.data.user);
           setloading(false)
+        
         })
         .catch((error) => {
           console.log(error);
         });
      
     }
+    getdeals();
+    getcategories();
   }, [dispatch, jwt]);
 
 useEffect(()=>{
@@ -85,13 +101,13 @@ useEffect(()=>{
   dispatch(setCategories(categories.categories))
     dispatch(setOffers(offers.offers))
     dispatch(setTopDeals(topDeals.deals))
-    console.log(offers.offers,"offer")
-    dispatch( setOffers(offers.offers))
+  
+   
 },[])
 //categories.categories,offers.offers,topDeals.deals
   return ( 
     <FilterLayout headTitle="Home">
-      <Offers users={user} loading={loading} homeoffers={dealoffers}   offerType="all" title={<><FormattedMessage id="Todays"/> <FormattedMessage id="Offers"/></>  } />
+      <Offers users={user} loading={loading} offer={dealoffers}   offerType="all" title={<><FormattedMessage id="Todays"/> <FormattedMessage id="Offers"/></>  } />
     </FilterLayout>
   );
 }

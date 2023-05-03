@@ -29,19 +29,25 @@ const VouchersPage = ({ vouchers }) => {
   const[user,setuser]=useState(userdata)
   const [Vouchers,setvouchers]=useState(vouchers.vouchers)
   const jwt = getCookie("token");
-  
+  const getVoucher=async()=>{
+    const vouchers = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/vouchers/?fields=-details`
+    ).then((res) => res.json());
+    setvouchers(vouchers.vouchers)
+  }
   useEffect(() => {
     dispatch(setVouchers(vouchers.vouchers));
     setvouchers(vouchers.vouchers)
   }, [vouchers.vouchers, dispatch]);
 useEffect(()=>{
 setuser(userdata)
+getVoucher()
 },[jwt])
   return (
     <FilterLayout headTitle="Vouchers">
       <Offers
       users={user}
-      voucher={Vouchers}
+      offer={Vouchers}
         title={
           <>
             <FormattedMessage id="Todays" /> <FormattedMessage id="Vouchers" />

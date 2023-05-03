@@ -58,21 +58,21 @@ export const getStaticProps = async (context) => {
   };
 };
 
-const ProductPage = ({ voucher }) => {
+const ProductPage = ({ voucher }) => { 
   const jwt = getCookie("token");
   let user = useSelector((state) => state.auth.user);
   const[Voucher,setVoucher]=useState(voucher)
   const dispatch=useDispatch();
-  const[Liked,setLiked]=useState(voucher.voucher.likes.length)
-  const[isLiked,setisLiked]=useState(voucher.voucher.likes.includes(user._id))
-  const[isSaved,setisSaved]=useState(user?.savedVouchers?.includes(voucher.voucher.id)||false)
-  const[comments,setcomments]=useState(voucher.voucher.comments)
+  const[Liked,setLiked]=useState(voucher?.voucher?.likes?.length)
+  const[isLiked,setisLiked]=useState(voucher?.voucher?.likes?.includes(user._id))
+  const[isSaved,setisSaved]=useState(user?.savedVouchers?.includes(voucher?.voucher?.id)||false)
+  const[comments,setcomments]=useState(voucher?.voucher?.comments)
   const[openReportModal,setOpenReportModal]=useState(false)
   const[openVoucherModal,setopenVoucherModal]=useState(false)
   const commentModalRef = useRef(null);
   const [copied, setCopied] = useState(false);
   useEffect(()=>{
-setVoucher(voucher.voucher)
+setVoucher(voucher?.voucher)
   },[voucher.voucher])
   const handleCopy = async (text) => {
     try {
@@ -90,7 +90,7 @@ setVoucher(voucher.voucher)
         let config = {
           method: "delete",
           maxBodyLength: Infinity,
-          url: `${process.env.NEXT_PUBLIC_API_URL}/offers/likes/${voucher.voucher.id}`,
+          url: `${process.env.NEXT_PUBLIC_API_URL}/offers/likes/${voucher?.voucher?.id}`,
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
@@ -111,7 +111,7 @@ setVoucher(voucher.voucher)
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `${process.env.NEXT_PUBLIC_API_URL}/offers/likes/${voucher.voucher.id}`,
+          url: `${process.env.NEXT_PUBLIC_API_URL}/offers/likes/${voucher?.voucher?.id}`,
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
@@ -139,7 +139,7 @@ setVoucher(voucher.voucher)
         let config = {
           method: "delete",
           maxBodyLength: Infinity,
-          url: `${process.env.NEXT_PUBLIC_API_URL}/vouchers/saves/${voucher.voucher.id}`,
+          url: `${process.env.NEXT_PUBLIC_API_URL}/vouchers/saves/${voucher?.voucher?.id}`,
           headers: {
             Authorization: `Bearer ${jwt}`,
             "Content-Type": "application/json",
@@ -164,7 +164,7 @@ setVoucher(voucher.voucher)
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `${process.env.NEXT_PUBLIC_API_URL}/vouchers/saves/${voucher.voucher.id}`,
+          url: `${process.env.NEXT_PUBLIC_API_URL}/vouchers/saves/${voucher?.voucher?.id}`,
           headers: {
             Authorization: `Bearer ${jwt}`,
             "Content-Type": "application/json",
@@ -287,11 +287,11 @@ const Share=()=>{
         contentLabel="Example Modal" 
       >
  <div className="text-2xl w-full justify-center flex text-center md:text-start  font-bold ">
-                  {voucher.voucher.title}
+                  {voucher?.voucher?.title}
                 </div>
                 <div className="flex align-middle justify-center gap-10 items-center px-3 py-3 border-[5px] mt-3 border-dotted">
-                <p className="font-[700] text-xl">{voucher.voucher.code}</p>
-                <button onClick={()=>{handleCopy(voucher.voucher.code)}} className="bg-[#5A0064]  text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
+                <p className="font-[700] text-xl">{voucher?.voucher?.code}</p>
+                <button onClick={()=>{handleCopy(voucher?.voucher?.code)}} className="bg-[#5A0064]  text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
         <FormattedMessage id="CopyCode"/>
        
         </button>
@@ -316,7 +316,7 @@ const Share=()=>{
           <div className="flex flex-col md:flex-row mt-5 md:space-x-5 mb-3">
             <div className="h-[350px] w-[350px] flex items-center justify-center p-4 rounded-lg">
               <Image
-                src={voucher.voucher.image.path}
+                src={voucher?.voucher?.image?.path}
                 width={350}
                 height={350}
                 alt="POST"
@@ -325,17 +325,17 @@ const Share=()=>{
             <div className="flex flex-col justify-between w-full">
               <div>
                 <div className="text-lg text-center md:text-start md:text-2xl font-bold md:w-[80%]">
-                  {voucher.voucher.title}
+                  {voucher?.voucher?.title}
                 </div>
                 <div className="text-gray-500 font-medium mt-2 text-center md:text-start">
                   Available from Amazon
                 </div>
                 <div className="flex items-center justify-center md:justify-start space-x-4 mt-4">
                   <div className="text-primary font-extrabold text-4xl">
-                    £{voucher.voucher.discountedPrice}
+                    £{voucher?.voucher?.discountedPrice}
                   </div>
                   <div className="font-medium text-gray-500 line-through text-2xl">
-                    £{voucher.voucher.recommendedRetailPrice}
+                    £{voucher?.voucher?.recommendedRetailPrice}
                   </div>
                 </div>
               </div>
@@ -386,7 +386,7 @@ const Share=()=>{
                 <ChatBubbleLeftEllipsisIcon className="h-6 w-6 p-[3px] text-gray-500 hover:bg-[#CCE5F4] hover:text-[#007BC7] rounded-full" />
                 <p><FormattedMessage id="Comment" /></p>
                 <div className="px-[5px] mt-[3px] bg-gray-400 text-white rounded-full text-xs">
-                  {voucher.voucher.comments.length}
+                  {voucher?.voucher?.comments?.length}
                 </div>
               </div>
               <button onClick={() => Share()} className="flex items-center space-x-1 cursor-pointer hover:text-[#FFBB00]">
@@ -408,7 +408,7 @@ const Share=()=>{
       <Accordion title={<FormattedMessage id="Details" />}>
         <p
           className="mt-5 break-words"
-          dangerouslySetInnerHTML={{ __html: voucher.voucher.details }}
+          dangerouslySetInnerHTML={{ __html: voucher?.voucher?.details }}
         ></p>
       </Accordion> 
       {/* Retailer Information */}
@@ -416,7 +416,7 @@ const Share=()=>{
         <div className="flex">
           <div className="flex border-gray-300 border rounded w-fit">
             <Image
-              src={voucher.voucher.sharedBy.image}
+              src={voucher?.voucher?.sharedBy?.image}
               alt="Retailer Image"
               width={80}
               height={80}
@@ -427,13 +427,13 @@ const Share=()=>{
               <div className="rounded-full p-2 bg-secondary">
                 <ShoppingBagIcon className="h-5 w-5 text-black" />
               </div>
-              <p><FormattedMessage id="All" /> {voucher.voucher.sharedBy.name} <FormattedMessage id="deals" /></p>
+              <p><FormattedMessage id="All" /> {voucher?.voucher?.sharedBy?.name} <FormattedMessage id="deals" /></p>
             </div>
             <div className="flex items-center gap-x-2 cursor-pointer">
               <div className="rounded-full p-2 bg-secondary">
                 <TicketIcon className="h-5 w-5 text-black" />
               </div>
-              <p> <FormattedMessage id="All" /> {voucher.voucher.sharedBy.name} <FormattedMessage id="discountCodes" /></p>
+              <p> <FormattedMessage id="All" /> {voucher?.voucher?.sharedBy?.name} <FormattedMessage id="discountCodes" /></p>
             </div>
           </div>
         </div>
@@ -442,7 +442,7 @@ const Share=()=>{
       <Accordion  title={<FormattedMessage id="Comments" />}>
         <div ref={commentModalRef}>
         <CommentModal  comments={comments}
-          setcomments={setcomments} offer={voucher.voucher} type="voucher" />
+          setcomments={setcomments} offer={voucher?.voucher} type="voucher" />
         </div>
         
       </Accordion>
