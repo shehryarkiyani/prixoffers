@@ -83,6 +83,7 @@ const News = ({ news }) => {
               <div className="text-lg leading-5 font-bold">
                 {item?.title}
               </div>
+              <div className="h-[100px] overflow-hidden">{item?.description}</div>
               <button className="flex font-bold space-x-1 pt-4 w-fit">
                 <p className="text-danger font-medium text-xs"><FormattedMessage id="Savings" /></p>
                 {language =="AR"?<ChevronLeftIcon className="h-4 w-4 text-danger" />:<ChevronRightIcon className="h-4 w-4 text-danger" /> }  
