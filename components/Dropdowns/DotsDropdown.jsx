@@ -2,8 +2,10 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import React, { useState,useEffect } from "react";
 import Modal from 'react-modal';
 import { FormattedMessage } from "react-intl";
+import { useSelector } from "react-redux";
 const DotsDropdown = ({ deal,Save,reportOffer,openReportModal,setOpenReportModal,isSaved }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const language=useSelector((state)=>state?.language?.value)
 console.log("issaved",isSaved)
   const [selectedValue, setSelectedValue] = useState(null);
   const[reportdata,setreportdata]=useState(
@@ -63,7 +65,23 @@ console.log("issaved",isSaved)
       width:"50%",
       height:"500px",
       overflowY:"auto",
-      position:"relative"
+      position:"relative",
+      paddingTop:"20px"
+    },
+  };
+  const customStyles2 = {
+    content: {
+      top: '50%',
+      right: 'auto',
+      left: 'auto',
+      marginRight: '0%',
+      bottom: 'auto',
+      transform: 'translate(-50%, -50%)',
+      width:"50%",
+      height:"500px",
+      overflowY:"auto",
+      position:"relative",
+      paddingTop:"20px"
     },
   };
   return (
@@ -76,11 +94,11 @@ console.log("issaved",isSaved)
         isOpen={openReportModal}
       
         onRequestClose={closeModal}
-        style={customStyles}
+        style={language=="AR"? customStyles2:customStyles}
         contentLabel="Example Modal" 
       >
 
-<i className="absolute right-2 cursor-pointer" onClick={()=>setOpenReportModal(false)}>X</i>     <h2 className="text-lg font-semibold "><FormattedMessage id="Thanksfor"/></h2>
+<i className="absolute top-2 right-2 cursor-pointer" onClick={()=>setOpenReportModal(false)}>X</i>     <h2 className="text-lg font-semibold "><FormattedMessage id="Thanksfor"/></h2>
        <p><FormattedMessage id="RewardMember"/> </p>
        <h2 className="text-md font-semibold "><FormattedMessage id="Sendreport"/></h2>
         <div className="flex gap-2 mt-3 ">
