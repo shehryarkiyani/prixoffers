@@ -11,7 +11,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html
-        dir={this.props.locale == "AR" ? "rtl" : "ltr"}
+        dir={this.props.locale == "AR" ? "rtl" : "ltr"}  //rtl
         lang={this.props.locale}
       >
         <Head ></Head>

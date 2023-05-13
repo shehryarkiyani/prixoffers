@@ -9,7 +9,9 @@ import {
   ShoppingBagIcon,
   TicketIcon,
 } from "@heroicons/react/24/solid";
+import XMarkIcon from "@heroicons/react/24/solid";
 import { HomeIcon } from "@heroicons/react/20/solid";
+import LoginForm from "@/components/Forms/LoginForm";
 import {
   ChatBubbleLeftEllipsisIcon,
   FlagIcon,
@@ -52,6 +54,7 @@ const ProductPage = ({ voucher }) => {
   const[openVoucherModal,setopenVoucherModal]=useState(false)
   const commentModalRef = useRef(null);
   const [copied, setCopied] = useState(false);
+  const language=useSelector((state)=>state?.language?.value)
   useEffect(()=>{
 setVoucher(voucher?.voucher)
   },[voucher.voucher])
@@ -257,6 +260,20 @@ const Share=()=>{
       position:"relative"
     },
   };
+  const customStyles2 = {
+    content: {
+      top: '45%',
+      right: 'auto',
+      left: 'auto',
+      marginRight: '20%',
+      bottom: 'auto',
+      transform: 'translate(-50%, -50%)',
+      width:"30%",
+      height:"250px",
+      overflowY:"auto",
+      position:"relative"
+    },
+  };
   return (
     <div className="flex flex-col items-center justify-center bg-secondary">
        <ToastContainer />
@@ -264,24 +281,50 @@ const Share=()=>{
         isOpen={openVoucherModal}
       
         onRequestClose={()=>setopenVoucherModal(false)}
-        style={customStyles}
+        style={language=="AR"? customStyles2:customStyles}
         contentLabel="Example Modal" 
       >
- <div className="text-2xl w-full justify-center flex text-center md:text-start  font-bold ">
-                  {voucher?.voucher?.title}
-                </div>
-                <div className="flex align-middle justify-center gap-10 items-center px-3 py-3 border-[5px] mt-3 border-dotted">
-                <p className="font-[700] text-xl">{voucher?.voucher?.code}</p>
-                <button onClick={()=>{handleCopy(voucher?.voucher?.code)}} className="bg-[#5A0064]  text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
-        <FormattedMessage id="CopyCode"/>
-       
-        </button>
-                </div>
-            {copied && <p className="text-[#5A0064] mt-2 font-[500] text-[13px]">Code Copied</p>}    
-        <button onClick={()=>{window.open(`${voucher?.voucher?.link}`,'_blank')}} className="bg-[#5A0064] w-full mt-5 text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
-        <FormattedMessage id="Continue to Serveddrinks"/>
-        </button>
+          <>
+     
+          <div className="text-2xl w-full justify-center flex text-center md:text-start  font-bold ">
+                   {voucher?.voucher?.title} hey
+                 </div>
+                 <div className="flex align-middle justify-center gap-10 items-center px-3 py-3 border-[5px] mt-3 border-dotted">
+                 <p className="font-[700] text-xl">{voucher?.voucher?.code}</p>
+                 <button onClick={()=>{handleCopy(voucher?.voucher?.code)}} className="bg-[#5A0064]  text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
+         <FormattedMessage id="CopyCode"/>
+        
+         </button>
+                 </div>
+             {copied && <p className="text-[#5A0064] mt-2 font-[500] text-[13px]">Code Copied</p>}    
+         <button onClick={()=>{window.open(`${voucher?.voucher?.link}`,'_blank')}} className="bg-[#5A0064] w-full mt-5 text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
+         <FormattedMessage id="Continue to Serveddrinks"/>
+         </button>
+          </>
+
       </Modal>
+        {/* {openVoucherModal &&
+          <>
+     
+          <div className="text-2xl w-full justify-center flex text-center md:text-start  font-bold ">
+                   {voucher?.voucher?.title} hey
+                 </div>
+                 <div className="flex align-middle justify-center gap-10 items-center px-3 py-3 border-[5px] mt-3 border-dotted">
+                 <p className="font-[700] text-xl">{voucher?.voucher?.code}</p>
+                 <button onClick={()=>{handleCopy(voucher?.voucher?.code)}} className="bg-[#5A0064]  text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
+         <FormattedMessage id="CopyCode"/>
+        
+         </button>
+                 </div>
+             {copied && <p className="text-[#5A0064] mt-2 font-[500] text-[13px]">Code Copied</p>}    
+         <button onClick={()=>{window.open(`${voucher?.voucher?.link}`,'_blank')}} className="bg-[#5A0064] w-full mt-5 text-white p-2 pl-3 pr-3 flex justify-center align-middle rounded-md">
+         <FormattedMessage id="Continue to Serveddrinks"/>
+         </button>
+          </>
+          
+
+        } */}
+     
       {/* ITEM HEADER */}
       <div className="w-full bg-white flex justify-center mb-8">
         <div className="bg-white pt-20 w-full max-w-5xl px-3 md:px-10">
