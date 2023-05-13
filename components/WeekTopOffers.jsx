@@ -53,7 +53,7 @@ if(type == "Deal" || type == "/" ){
  colors={['#5A0064']}
 />
 }
-<div className="flex flex-nowrap space-x-3 w-full scroll-smooth py-2 overflow-x-auto scrollbar">
+<div className="flex flex-nowrap gap-3 w-full scroll-smooth py-2 overflow-x-auto scrollbar">
   {offers?.map((item)=>{
     return(
 <TopOffer key={item.id} item={item} handleClick={handleClick} id={item.id} title={item.title} image={item?.image?.path} likes={item.likes.length} />
