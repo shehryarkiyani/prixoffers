@@ -1,10 +1,11 @@
-import { ChevronRightIcon } from "@heroicons/react/24/solid";
+import { ChevronRightIcon,ChevronLeftIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { Fragment } from "react";
 import { FormattedMessage } from 'react-intl';
 import Link from "next/link";
 import { useEffect,useState } from "react";
+import { useSelector } from "react-redux";
 export async function getStaticProps() {
   const news = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/blogs/?fields=-content`
@@ -23,7 +24,7 @@ const News = ({ news }) => {
   const router = useRouter();
   const [firstNews,setFirstNews]=useState()
   const[restNews,setRestNews]=useState()
-  
+  const language=useSelector((state)=>state?.language?.value)
   console.log(restNews,"rest")
   const getNews=async()=>{
     const news = await fetch(
@@ -58,7 +59,7 @@ const News = ({ news }) => {
            
           >
             <p className="text-danger font-medium text-xs"><FormattedMessage id="Savings" /></p>
-            <ChevronRightIcon className="h-4 w-4 text-danger" />
+          {language =="AR"?<ChevronLeftIcon className="h-4 w-4 text-danger" />:<ChevronRightIcon className="h-4 w-4 text-danger" /> }  
           </button>
         </Link>
 
@@ -84,7 +85,7 @@ const News = ({ news }) => {
               </div>
               <button className="flex font-bold space-x-1 pt-4 w-fit">
                 <p className="text-danger font-medium text-xs"><FormattedMessage id="Savings" /></p>
-                <ChevronRightIcon className="h-4 w-4 text-danger" />
+                {language =="AR"?<ChevronLeftIcon className="h-4 w-4 text-danger" />:<ChevronRightIcon className="h-4 w-4 text-danger" /> }  
               </button>
             </div>
           </Link>
