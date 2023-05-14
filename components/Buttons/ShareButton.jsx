@@ -22,6 +22,18 @@ const ShareButton = () => {
     document.querySelector("html").setAttribute("dir", dir);
     document.querySelector("html").setAttribute("lang", selectedLang);
     },[])
+    function handleClickOutside(event) {
+      if (showDropDown && !event.target.closest('.z-0')) {
+        setShowDropDown(false)
+      }
+    }
+    useEffect(()=>{
+      document.addEventListener('click', handleClickOutside);
+  
+      return () => {
+        document.removeEventListener('click', handleClickOutside);
+      };
+    },[showDropDown])
   return (
     <div className="lg:order-4 relative z-0">
       <button

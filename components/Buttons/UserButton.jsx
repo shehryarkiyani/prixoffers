@@ -1,5 +1,5 @@
 import { logoutUser } from "@/redux/auth/action-creators";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useDispatch } from "react-redux";
 import { FormattedMessage } from 'react-intl';
 import Link from "next/link";
@@ -14,6 +14,18 @@ const UserButton = ({ user }) => {
     dispatch(logoutUser(user));
     router.push('/')
   }
+  function handleClickOutside(event) {
+    if (showOptions && !event.target.closest('.pl-2')) {
+      setShowOptions(false);
+    }
+  }
+  useEffect(()=>{
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  },[showOptions])
   return (
     <div className="pl-2 border-l border-gray-400 lg:order-4 flex items-center relative">
       <button
