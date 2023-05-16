@@ -19,7 +19,7 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
   const router = useRouter();
   const jwt = getCookie("token");
   const dynamicUrl = `/${offerType == "Voucher" ? "vouchers" : "deals"}/${offerid}`
- 
+ console.log('')
   const [liked,setLiked]=useState(item?.likes?.includes(user?._id) || false)
   const[totalLiked,setTotalLiked]=useState(item?.likes?.length || 0)
   const dispatch=useDispatch()
@@ -172,6 +172,11 @@ const OfferCard = ({ offerid, offerType, time, image, title, deal, price, realPr
       <button onClick={()=>{
       router.push(dynamicUrl)
     }}  className="text-gray-400 text-xs text-center">{deal}</button>
+     <p onClick={()=>{
+            window.open(item?.link)
+          }} className="text-[14px] text-center" >
+            Available For Amazon
+          </p>
       {
         // If the price is not equal to the real price, then show the real price with a line through it
         price ? (price !== realPrice ? (
