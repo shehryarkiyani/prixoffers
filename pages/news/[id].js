@@ -24,8 +24,9 @@ const NewsInstance = () => {
   
   
     <div className="flex flex-col items-center justify-center bg-secondary px-5 pt-20 pb-5">
-    <div className="w-full max-w-2xl">
-      <HomeIcon className="h-4 w-4 mb-4 mx-1" />
+    <div className="w-full max-w-2xl flex items-center mb-4">
+      <HomeIcon className="h-4 w-4  mr-2" /> 
+      <p className="text-[14px]"><b >{'>'}</b>{' News '}<b className="mr-1">{'>'}</b>{'Shopping'}</p>
     </div>
     <div className="bg-white rounded-lg p-4 w-full max-w-2xl break-words font-[350]">
     {loader &&  <div className="flex justify-center">
